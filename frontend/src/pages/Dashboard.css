@@ -1,0 +1,232 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Balance card */
+.balance-card {
+  background: var(--itus-gradient);
+  color: #fff;
+  border-radius: var(--itus-radius);
+  padding: 28px;
+  box-shadow: var(--itus-shadow-lg);
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+}
+.balance-card::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -60px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(241, 177, 23, 0.22), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.balance-card::after {
+  content: '';
+  position: absolute;
+  bottom: -90px;
+  left: -50px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.balance-label {
+  font-size: 13px;
+  opacity: 0.85;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+.balance-amount {
+  font-size: 40px;
+  font-weight: 800;
+  margin: 10px 0 18px;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -1px;
+}
+.balance-meta {
+  display: flex;
+  gap: 28px;
+  position: relative;
+  z-index: 1;
+}
+.balance-meta-item {
+  font-size: 13px;
+}
+.balance-meta-label {
+  opacity: 0.7;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.balance-meta-value {
+  font-weight: 600;
+}
+
+/* Quick actions */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+@media (max-width: 600px) {
+  .quick-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.quick-action {
+  background: var(--itus-surface);
+  border: 1px solid var(--itus-border);
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--itus-text);
+  transition: all 0.15s ease;
+}
+.quick-action:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--itus-shadow);
+  text-decoration: none;
+  border-color: var(--itus-primary-light);
+}
+.quick-action-icon {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 8px;
+  border-radius: 50%;
+  background: rgba(10, 61, 98, 0.08);
+  color: var(--itus-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+}
+.quick-action-label {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* Stats row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 18px;
+}
+@media (max-width: 700px) {
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+.stat-card {
+  background: var(--itus-surface);
+  border-radius: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--itus-border);
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--itus-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+/* Transaction list */
+.tx-list {
+  display: flex;
+  flex-direction: column;
+}
+.tx-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--itus-border);
+}
+.tx-row:last-child {
+  border-bottom: none;
+}
+.tx-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(10, 61, 98, 0.07);
+  color: var(--itus-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.tx-icon.tx-icon-pos {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--itus-success);
+}
+.tx-icon.tx-icon-neg {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--itus-danger);
+}
+.tx-body {
+  flex: 1;
+  min-width: 0;
+}
+.tx-desc {
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tx-date {
+  font-size: 12px;
+  color: var(--itus-muted);
+  margin-top: 2px;
+}
+.tx-amount {
+  font-weight: 700;
+  white-space: nowrap;
+}
+.tx-positive {
+  color: var(--itus-success);
+}
+.tx-negative {
+  color: var(--itus-danger);
+}
+
+/* Page container */
+.page-header {
+  margin-bottom: 18px;
+}
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+}
+.page-subtitle {
+  color: var(--itus-muted);
+  font-size: 13px;
+  margin-top: 3px;
+}

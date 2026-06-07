@@ -1,0 +1,86 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: bankapp-postgres
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-bankuser}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-bankpass123}
+      POSTGRES_DB: ${DATABASE_NAME:-bankappdb}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bankuser"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - bankapp-network
+
+  # Ollama - AI Service (model baked in via ai/Dockerfile)
+  ollama:
+    build:
+      context: ./ai
+      dockerfile: Dockerfile
+    container_name: bankapp-ollama
+    ports:
+      - "11436:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ls", "/root/.ollama"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - bankapp-network
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bankapp-backend
+    ports:
+      - "8082:8080"
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${DATABASE_NAME:-bankappdb}
+      DATABASE_USER: ${DATABASE_USER:-bankuser}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-bankpass123}
+      OLLAMA_URL: http://ollama:11434
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-key-that-should-be-at-least-256-bits-long-for-security}
+      JWT_EXPIRATION: 86400000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    networks:
+      - bankapp-network
+    restart: unless-stopped
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: bankapp-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - bankapp-network
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  ollama-data:
+
+networks:
+  bankapp-network:
+    driver: bridge

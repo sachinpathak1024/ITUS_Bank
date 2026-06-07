@@ -1,0 +1,13 @@
+.git
+.gitignore
+node_modules
+dist
+build
+*.md
+.DS_Store
+*.log
+target
+.mvn
+mvnw
+mvnw.cmd
+.dockerignore
