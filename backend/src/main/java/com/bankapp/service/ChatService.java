@@ -55,7 +55,7 @@ public class ChatService {
     private ConversationRepository conversationRepository;
 
     public ChatService(WebClient.Builder webClientBuilder,
-                       @Value("${ollama.url:http://ollama:11434}") String ollamaUrl,
+                       @Value("${ollama.url:http://ollama-svc:11434}") String ollamaUrl,
                        @Value("${ollama.model}") String ollamaModel) {
         this.ollamaUrl = ollamaUrl;
         this.ollamaModel = ollamaModel;

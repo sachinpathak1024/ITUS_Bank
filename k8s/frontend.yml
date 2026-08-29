@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: itus-ns
+  labels:
+    app: frontend-label
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend-label
+  template:
+    metadata:
+      labels:
+        app: frontend-label
+    spec:
+      containers:
+      - name: frontend
+        image: sach990p/itus-front:v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        envFrom:
+          - configMapRef:
+             name: itus-configmap
+          - secretRef:
+             name: itus-secrets
