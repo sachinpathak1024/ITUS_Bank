@@ -1,7 +1,7 @@
 .ca-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(10, 61, 98, 0.45);
+  background: rgb(10 61 98 / 45%);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -9,6 +9,7 @@
   padding: 20px;
   animation: ca-fade 0.15s ease;
 }
+
 @keyframes ca-fade {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -23,9 +24,17 @@
   padding: 28px;
   animation: ca-pop 0.18s ease;
 }
+
 @keyframes ca-pop {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from { 
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to { 
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .ca-title {
@@ -33,6 +42,7 @@
   font-weight: 700;
   color: var(--itus-text);
 }
+
 .ca-subtitle {
   font-size: 13.5px;
   color: var(--itus-muted);
@@ -46,20 +56,24 @@
   border-radius: 10px;
   border: 1px solid var(--itus-border);
 }
+
 .ca-row {
   display: flex;
   justify-content: space-between;
   font-size: 13.5px;
   padding: 5px 0;
 }
+
 .ca-row + .ca-row {
   border-top: 1px solid var(--itus-border);
   margin-top: 4px;
   padding-top: 8px;
 }
+
 .ca-label {
   color: var(--itus-muted);
 }
+
 .ca-value {
   font-weight: 600;
 }

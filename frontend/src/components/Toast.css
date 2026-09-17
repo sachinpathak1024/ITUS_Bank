@@ -18,7 +18,7 @@
   padding: 14px 18px;
   border-radius: 12px;
   background: #fff;
-  box-shadow: 0 12px 32px rgba(10, 61, 98, 0.18);
+  box-shadow: 0 12px 32px rgb(10 61 98 / 18%);
   font-size: 14px;
   font-weight: 500;
   pointer-events: auto;
@@ -30,9 +30,11 @@
 .toast-success {
   border-left-color: var(--itus-success);
 }
+
 .toast-error {
   border-left-color: var(--itus-danger);
 }
+
 .toast-info {
   border-left-color: var(--itus-primary);
 }
@@ -48,12 +50,15 @@
   flex-shrink: 0;
   color: #fff;
 }
+
 .toast-success .toast-icon {
   background: var(--itus-success);
 }
+
 .toast-error .toast-icon {
   background: var(--itus-danger);
 }
+
 .toast-info .toast-icon {
   background: var(--itus-primary);
 }
@@ -68,6 +73,7 @@
     transform: translateX(20px);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;

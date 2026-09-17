@@ -16,9 +16,11 @@
   font-size: 17px;
   color: var(--itus-text);
 }
+
 .nb-btn:hover {
   background: var(--itus-surface);
 }
+
 .nb-icon {
   filter: grayscale(0.2);
 }
@@ -62,16 +64,19 @@
   padding: 14px 16px;
   border-bottom: 1px solid var(--itus-border);
 }
+
 .nb-title {
   font-weight: 700;
   font-size: 14px;
 }
+
 .nb-refresh {
   font-size: 16px;
   color: var(--itus-muted);
   padding: 4px 10px;
   border-radius: 6px;
 }
+
 .nb-refresh:hover {
   background: var(--itus-surface-2);
 }
@@ -95,8 +100,9 @@
   border-bottom: 1px solid var(--itus-border);
 }
 .nb-item:last-child { border-bottom: none; }
+
 .nb-unread {
-  background: rgba(10, 61, 98, 0.04);
+  background: rgb(10 61 98 / 4%);
 }
 
 .nb-item-icon {
@@ -112,20 +118,24 @@
   font-size: 14px;
   flex-shrink: 0;
 }
+
 .nb-item-body {
   flex: 1;
   min-width: 0;
 }
+
 .nb-item-title {
   font-weight: 600;
   font-size: 13.5px;
 }
+
 .nb-item-msg {
   font-size: 12.5px;
   color: var(--itus-muted);
   margin-top: 2px;
   line-height: 1.4;
 }
+
 .nb-item-date {
   font-size: 11px;
   color: var(--itus-muted);
