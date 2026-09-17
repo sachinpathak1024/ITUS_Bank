@@ -20,22 +20,22 @@ services:
       - bankapp-network
 
   # Ollama - AI Service (model baked in via ai/Dockerfile)
-  ollama:
-    build:
-      context: ./ai
-      dockerfile: Dockerfile
-    container_name: bankapp-ollama
-    ports:
-      - "11436:11434"
-    volumes:
-      - ollama-data:/root/.ollama
-    healthcheck:
-      test: ["CMD", "ls", "/root/.ollama"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - bankapp-network
+  # ollama:
+  #   build:
+  #     context: ./ai
+  #     dockerfile: Dockerfile
+  #   container_name: bankapp-ollama
+  #   ports:
+  #     - "11436:11434"
+  #   volumes:
+  #     - ollama-data:/root/.ollama
+  #   healthcheck:
+  #     test: ["CMD", "ls", "/root/.ollama"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - bankapp-network
 
   # Spring Boot Backend
   backend:
@@ -51,14 +51,14 @@ services:
       DATABASE_NAME: ${DATABASE_NAME:-bankappdb}
       DATABASE_USER: ${DATABASE_USER:-bankuser}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:-bankpass123}
-      OLLAMA_URL: http://ollama:11434
+      # OLLAMA_URL: http://ollama:11434
       JWT_SECRET: ${JWT_SECRET:-your-super-secret-key-that-should-be-at-least-256-bits-long-for-security}
       JWT_EXPIRATION: 86400000
     depends_on:
       postgres:
         condition: service_healthy
-      ollama:
-        condition: service_healthy
+      # ollama:
+      #   condition: service_healthy
     networks:
       - bankapp-network
     restart: unless-stopped
@@ -79,7 +79,7 @@ services:
 
 volumes:
   postgres-data:
-  ollama-data:
+  # ollama-data:
 
 networks:
   bankapp-network:

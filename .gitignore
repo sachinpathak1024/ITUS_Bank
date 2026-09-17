@@ -13,3 +13,10 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Ignore local Husky hooks
+.husky/
+
+# OR, if you use a custom hooks folder
+.githooks/
+node_modules/
