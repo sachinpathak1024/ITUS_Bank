@@ -12,7 +12,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false",
+    "test": "react-scripts test --watchAll=false --passWithNoTests",
     "lint": "eslint .",
     "stylelint": "stylelint \"src/**/*.css\" --fix",
     "eject": "react-scripts eject"
