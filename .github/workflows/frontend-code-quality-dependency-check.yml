@@ -1,4 +1,6 @@
-name: frontend code-quality check
+# used stylelint, eslint and jest to test code and dependency check - when anything changed on frontend folder
+
+name: frontend code-quality and dependency check check
 
 on:
     push:
@@ -17,7 +19,7 @@ jobs:
 
             - name: Check for Frontend Changes
               id: filter
-              uses: dorny/paths-filter@v3
+              uses: dorny/paths-filter@v4
               with:
                 filters: |
                     frontend:
@@ -36,6 +38,6 @@ jobs:
               working-directory: ./frontend
               run: |
                 npm ci
-                npm run lint     # Runs ESLint
-                npm run stylelint # Runs Stylelint
-                npm run test     # Runs Frontend Unit Tests
+                npm run lint
+                npm run stylelint
+                npm run test
