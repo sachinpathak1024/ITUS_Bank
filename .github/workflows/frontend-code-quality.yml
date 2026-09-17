@@ -34,7 +34,6 @@ jobs:
             - name: Install & Test Frontend
               if: steps.filter.outputs.frontend == 'true'
               run: |
-                cd frontend
                 npm ci
                 npm run lint     # Runs ESLint
                 npm run stylelint # Runs Stylelint
