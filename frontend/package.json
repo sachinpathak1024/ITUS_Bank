@@ -14,7 +14,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false",
     "lint": "eslint .",
-    "stylelint": "stylelint \"src/**/*.css\" --fix"
+    "stylelint": "stylelint \"src/**/*.css\" --fix",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
