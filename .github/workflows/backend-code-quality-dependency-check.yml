@@ -1,9 +1,9 @@
-name: frontend code-quality and dependency check check
+name: backend code-quality and dependency check check
 
 on:
-    # push:
-    #     branches: [actions]
-    workflow_call
+    push:
+        branches: [actions]
+    # workflow_call
 
 jobs:
     validate-backend:

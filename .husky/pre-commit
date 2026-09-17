@@ -1,3 +1,6 @@
 cd frontend
 npm run lint
 npm run stylelint
+
+cd ../backend
+mvn spotless:apply
