@@ -1,8 +1,6 @@
 name: building and pushing the images here
 on:
-  push:
-    branches: [actions]
-
+  workflow_call
 jobs:
   build-and-push:
     name: code_checkout

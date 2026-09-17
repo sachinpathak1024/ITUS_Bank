@@ -1,0 +1,42 @@
+{
+  "name": "project-root",
+  "private": true,
+  "developerDependencies": {
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0"
+  },
+  "lint-staged": {
+    "frontend/**/*.{js,jsx,ts,tsx}": [
+      "cd frontend && npm run lint --fix",
+      "cd frontend && npm run format"
+    ],
+    "frontend/**/*.css": [
+      "cd frontend && npm run stylelint --fix"
+    ],
+    "backend/**/*.java": [
+      "cd backend && ./gradlew spotlessApply"
+    ]
+  },
+  "description": "A modern, full-stack online banking demo with an integrated AI assistant. Built with **React** (frontend), **Spring Boot 3 + PostgreSQL** (backend), and **Ollama / tinyllama** (AI).",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sachinpathak1024/ITUS_Bank.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sachinpathak1024/ITUS_Bank/issues"
+  },
+  "homepage": "https://github.com/sachinpathak1024/ITUS_Bank#readme",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1"
+  }
+}
