@@ -37,8 +37,7 @@ public class SecurityExtrasController {
     }
 
     @PostMapping("/pin")
-    public Map<String, Object> setPin(@AuthenticationPrincipal Account account,
-                                      @RequestBody PinRequest request) {
+    public Map<String, Object> setPin(@AuthenticationPrincipal Account account, @RequestBody PinRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Account fresh = accountService.getAccountByUsername(account.getUsername());
@@ -56,8 +55,7 @@ public class SecurityExtrasController {
     }
 
     @PostMapping("/pin/change")
-    public Map<String, Object> changePin(@AuthenticationPrincipal Account account,
-                                         @RequestBody PinRequest request) {
+    public Map<String, Object> changePin(@AuthenticationPrincipal Account account, @RequestBody PinRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Account fresh = accountService.getAccountByUsername(account.getUsername());
@@ -72,8 +70,7 @@ public class SecurityExtrasController {
     }
 
     @DeleteMapping("/pin")
-    public Map<String, Object> clearPin(@AuthenticationPrincipal Account account,
-                                        @RequestBody PinRequest request) {
+    public Map<String, Object> clearPin(@AuthenticationPrincipal Account account, @RequestBody PinRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Account fresh = accountService.getAccountByUsername(account.getUsername());

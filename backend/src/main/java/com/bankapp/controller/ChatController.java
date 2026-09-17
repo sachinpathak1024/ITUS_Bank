@@ -27,15 +27,14 @@ public class ChatController {
 
     @PostMapping("/ask")
     public Map<String, Object> askQuestion(@AuthenticationPrincipal Account account,
-                                           @RequestBody Map<String, String> request) {
+            @RequestBody Map<String, String> request) {
         String userMessage = request.get("message");
         Account fresh = accountService.getAccountByUsername(account.getUsername());
         return chatService.chat(userMessage, fresh);
     }
 
     @PostMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter stream(@AuthenticationPrincipal Account account,
-                             @RequestBody Map<String, String> request) {
+    public SseEmitter stream(@AuthenticationPrincipal Account account, @RequestBody Map<String, String> request) {
         String userMessage = request.get("message");
         SseEmitter emitter = new SseEmitter(120_000L);
         Account fresh = accountService.getAccountByUsername(account.getUsername());

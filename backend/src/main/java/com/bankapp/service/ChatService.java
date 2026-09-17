@@ -25,17 +25,15 @@ import java.util.Map;
 @Service
 public class ChatService {
 
-    private static final String SYSTEM_PROMPT =
-            "You are ITUS Bank's helpful AI assistant for an individual customer. " +
-            "Use the ACCOUNT CONTEXT block below as the authoritative source of facts " +
-            "about the user's account — when they ask about their balance, account number, " +
-            "or recent activity, answer from this context. " +
-            "All money is in Indian Rupees (₹/INR). " +
-            "For general banking questions, give concise, practical answers in plain language. " +
-            "Keep answers to 2-4 sentences unless the user asks for detail. " +
-            "Never invent transactions, balances, or interest rates. " +
-            "If the user asks to perform a money action (transfer, withdraw, deposit, pay bill), " +
-            "briefly confirm you can help — the app will show a confirm button for them to approve.";
+    private static final String SYSTEM_PROMPT = "You are ITUS Bank's helpful AI assistant for an individual customer. "
+            + "Use the ACCOUNT CONTEXT block below as the authoritative source of facts "
+            + "about the user's account — when they ask about their balance, account number, "
+            + "or recent activity, answer from this context. " + "All money is in Indian Rupees (₹/INR). "
+            + "For general banking questions, give concise, practical answers in plain language. "
+            + "Keep answers to 2-4 sentences unless the user asks for detail. "
+            + "Never invent transactions, balances, or interest rates. "
+            + "If the user asks to perform a money action (transfer, withdraw, deposit, pay bill), "
+            + "briefly confirm you can help — the app will show a confirm button for them to approve.";
 
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd MMM");
     private static final int RECENT_TX_LIMIT = 6;
@@ -44,9 +42,7 @@ public class ChatService {
     private final String ollamaUrl;
     private final String ollamaModel;
     private final ObjectMapper mapper = new ObjectMapper();
-    private final HttpClient httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(10))
-            .build();
+    private final HttpClient httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
 
     @Autowired
     private TransactionService transactionService;
@@ -54,9 +50,8 @@ public class ChatService {
     @Autowired
     private ConversationRepository conversationRepository;
 
-    public ChatService(WebClient.Builder webClientBuilder,
-                       @Value("${ollama.url:http://ollama:11434}") String ollamaUrl,
-                       @Value("${ollama.model}") String ollamaModel) {
+    public ChatService(WebClient.Builder webClientBuilder, @Value("${ollama.url:http://ollama:11434}") String ollamaUrl,
+            @Value("${ollama.model}") String ollamaModel) {
         this.ollamaUrl = ollamaUrl;
         this.ollamaModel = ollamaModel;
         this.webClient = webClientBuilder.baseUrl(ollamaUrl).build();
@@ -98,8 +93,8 @@ public class ChatService {
     /** Streams tokens to an SseEmitter as they arrive from Ollama. */
     public void streamChat(String userMessage, Account account, SseEmitter emitter) throws Exception {
         if (userMessage == null || userMessage.isBlank()) {
-            emitter.send(SseEmitter.event().name("token")
-                    .data(mapper.writeValueAsString("Please ask a banking question.")));
+            emitter.send(
+                    SseEmitter.event().name("token").data(mapper.writeValueAsString("Please ask a banking question.")));
             emitter.send(SseEmitter.event().name("done").data("{\"done\":true}"));
             emitter.complete();
             return;
@@ -108,32 +103,22 @@ public class ChatService {
         persist(account, "user", userMessage);
         Map<String, Object> suggested = IntentDetector.detect(userMessage);
 
-        Map<String, Object> requestBody = Map.of(
-                "model", ollamaModel,
-                "stream", true,
-                "messages", List.of(
-                        Map.of("role", "system", "content", SYSTEM_PROMPT),
+        Map<String, Object> requestBody = Map.of("model", ollamaModel, "stream", true, "messages",
+                List.of(Map.of("role", "system", "content", SYSTEM_PROMPT),
                         Map.of("role", "system", "content", buildContext(account)),
-                        Map.of("role", "user", "content", userMessage)
-                ),
-                "options", Map.of(
-                        "temperature", 0.3,
-                        "num_predict", 256
-                )
-        );
+                        Map.of("role", "user", "content", userMessage)),
+                "options", Map.of("temperature", 0.3, "num_predict", 256));
 
-        HttpRequest httpReq = HttpRequest.newBuilder()
-                .uri(URI.create(ollamaUrl + "/api/chat"))
-                .header("Content-Type", "application/json")
-                .timeout(Duration.ofMinutes(2))
-                .POST(HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(requestBody)))
-                .build();
+        HttpRequest httpReq = HttpRequest.newBuilder().uri(URI.create(ollamaUrl + "/api/chat"))
+                .header("Content-Type", "application/json").timeout(Duration.ofMinutes(2))
+                .POST(HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(requestBody))).build();
 
         StringBuilder fullText = new StringBuilder();
 
         try (var lines = httpClient.send(httpReq, HttpResponse.BodyHandlers.ofLines()).body()) {
             for (String line : (Iterable<String>) lines::iterator) {
-                if (line == null || line.isBlank()) continue;
+                if (line == null || line.isBlank())
+                    continue;
                 String token;
                 try {
                     JsonNode node = mapper.readTree(line);
@@ -141,11 +126,11 @@ public class ChatService {
                 } catch (Exception ex) {
                     continue;
                 }
-                if (token.isEmpty()) continue;
+                if (token.isEmpty())
+                    continue;
                 fullText.append(token);
                 try {
-                    emitter.send(SseEmitter.event().name("token")
-                            .data(mapper.writeValueAsString(token)));
+                    emitter.send(SseEmitter.event().name("token").data(mapper.writeValueAsString(token)));
                 } catch (Exception sendEx) {
                     // Client disconnected — stop streaming
                     return;
@@ -157,14 +142,14 @@ public class ChatService {
         String finalText = fullText.toString();
         if (finalText.isBlank()) {
             finalText = "Sorry, I couldn't generate a response. Please try again.";
-            emitter.send(SseEmitter.event().name("token")
-                    .data(mapper.writeValueAsString(finalText)));
+            emitter.send(SseEmitter.event().name("token").data(mapper.writeValueAsString(finalText)));
         }
         persist(account, "bot", finalText);
 
         Map<String, Object> doneData = new HashMap<>();
         doneData.put("done", true);
-        if (suggested != null) doneData.put("suggestedAction", suggested);
+        if (suggested != null)
+            doneData.put("suggestedAction", suggested);
         emitter.send(SseEmitter.event().name("done").data(mapper.writeValueAsString(doneData)));
         emitter.complete();
     }
@@ -176,34 +161,22 @@ public class ChatService {
             c.setRole(role);
             c.setContent(content);
             conversationRepository.save(c);
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+        }
     }
 
     private String callOllama(String userMessage, Account account) {
         try {
             String contextBlock = buildContext(account);
 
-            Map<String, Object> request = Map.of(
-                    "model", ollamaModel,
-                    "stream", false,
-                    "messages", List.of(
-                            Map.of("role", "system", "content", SYSTEM_PROMPT),
+            Map<String, Object> request = Map.of("model", ollamaModel, "stream", false, "messages",
+                    List.of(Map.of("role", "system", "content", SYSTEM_PROMPT),
                             Map.of("role", "system", "content", contextBlock),
-                            Map.of("role", "user", "content", userMessage)
-                    ),
-                    "options", Map.of(
-                            "temperature", 0.3,
-                            "num_predict", 256
-                    )
-            );
+                            Map.of("role", "user", "content", userMessage)),
+                    "options", Map.of("temperature", 0.3, "num_predict", 256));
 
-            String body = webClient.post()
-                    .uri("/api/chat")
-                    .bodyValue(request)
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .timeout(Duration.ofSeconds(60))
-                    .block();
+            String body = webClient.post().uri("/api/chat").bodyValue(request).retrieve().bodyToMono(String.class)
+                    .timeout(Duration.ofSeconds(60)).block();
 
             JsonNode root = mapper.readTree(body);
             JsonNode content = root.path("message").path("content");
@@ -235,9 +208,8 @@ public class ChatService {
             recent.stream().limit(RECENT_TX_LIMIT).forEach(t -> {
                 String date = t.getCreatedAt() == null ? "?" : t.getCreatedAt().format(DATE_FMT);
                 String sign = isCredit(t.getTransactionType()) ? "+" : "-";
-                ctx.append("  • ").append(date)
-                   .append(" — ").append(humanType(t.getTransactionType()))
-                   .append(" ").append(sign).append("₹").append(t.getAmount());
+                ctx.append("  • ").append(date).append(" — ").append(humanType(t.getTransactionType())).append(" ")
+                        .append(sign).append("₹").append(t.getAmount());
                 if (t.getDescription() != null && !t.getDescription().isBlank()) {
                     ctx.append(" (").append(t.getDescription()).append(')');
                 }
@@ -256,7 +228,8 @@ public class ChatService {
     }
 
     private String humanType(String type) {
-        if (type == null) return "Transaction";
+        if (type == null)
+            return "Transaction";
         return switch (type) {
             case "DEPOSIT" -> "Deposit";
             case "WITHDRAWAL" -> "Withdrawal";

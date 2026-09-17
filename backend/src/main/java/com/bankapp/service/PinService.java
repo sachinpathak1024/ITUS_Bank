@@ -20,11 +20,12 @@ public class PinService {
     }
 
     /**
-     * Enforce PIN: if the user has set a PIN, the request must include a matching one.
-     * If no PIN is set, this is a no-op (PIN is opt-in).
+     * Enforce PIN: if the user has set a PIN, the request must include a matching
+     * one. If no PIN is set, this is a no-op (PIN is opt-in).
      */
     public void enforce(Account account, String pin) {
-        if (!isSet(account)) return;
+        if (!isSet(account))
+            return;
         if (pin == null || pin.isBlank()) {
             throw new IllegalArgumentException("PIN required");
         }

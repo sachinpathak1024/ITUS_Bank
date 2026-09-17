@@ -19,13 +19,9 @@ import java.util.Set;
 public class LoanService {
 
     // Annual interest rates by purpose (mock, for the play project)
-    private static final Map<String, BigDecimal> RATES = Map.of(
-            "PERSONAL", new BigDecimal("12.5"),
-            "HOME", new BigDecimal("8.5"),
-            "AUTO", new BigDecimal("9.5"),
-            "EDUCATION", new BigDecimal("10.0"),
-            "BUSINESS", new BigDecimal("13.0")
-    );
+    private static final Map<String, BigDecimal> RATES = Map.of("PERSONAL", new BigDecimal("12.5"), "HOME",
+            new BigDecimal("8.5"), "AUTO", new BigDecimal("9.5"), "EDUCATION", new BigDecimal("10.0"), "BUSINESS",
+            new BigDecimal("13.0"));
 
     private static final Set<Integer> TENURES = Set.of(6, 12, 24, 36, 48, 60, 120, 180, 240);
 
@@ -50,11 +46,12 @@ public class LoanService {
     }
 
     /**
-     * Standard EMI = P × r × (1+r)^n / ((1+r)^n - 1)
-     * Where r is the monthly rate (annual/12/100) and n is months.
+     * Standard EMI = P × r × (1+r)^n / ((1+r)^n - 1) Where r is the monthly rate
+     * (annual/12/100) and n is months.
      */
     public BigDecimal computeEmi(BigDecimal principal, BigDecimal annualRate, int months) {
-        if (principal.compareTo(BigDecimal.ZERO) <= 0 || months <= 0) return BigDecimal.ZERO;
+        if (principal.compareTo(BigDecimal.ZERO) <= 0 || months <= 0)
+            return BigDecimal.ZERO;
         double r = annualRate.doubleValue() / 12.0 / 100.0;
         double p = principal.doubleValue();
         if (r == 0.0) {
@@ -69,7 +66,8 @@ public class LoanService {
     public Loan apply(Account owner, LoanRequest request) {
         String purpose = request.getPurpose() == null ? "PERSONAL" : request.getPurpose().toUpperCase();
         BigDecimal rate = RATES.get(purpose);
-        if (rate == null) throw new IllegalArgumentException("Unknown loan purpose");
+        if (rate == null)
+            throw new IllegalArgumentException("Unknown loan purpose");
 
         BigDecimal principal = request.getPrincipal();
         if (principal == null || principal.compareTo(new BigDecimal("1000")) < 0) {
@@ -102,8 +100,7 @@ public class LoanService {
         // Credit the principal to the user's account (auto-approved for demo)
         owner.setBalance(owner.getBalance().add(principal));
         accountRepository.save(owner);
-        transactionService.recordTransaction(owner, "DEPOSIT", principal, null, null,
-                "Loan disbursement: " + purpose);
+        transactionService.recordTransaction(owner, "DEPOSIT", principal, null, null, "Loan disbursement: " + purpose);
 
         notificationService.emit(owner, "SYSTEM", "Loan approved",
                 "₹" + principal + " " + purpose + " loan disbursed. EMI ₹" + emi + " × " + months + " months.");

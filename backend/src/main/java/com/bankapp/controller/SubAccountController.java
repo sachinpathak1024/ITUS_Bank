@@ -30,19 +30,15 @@ public class SubAccountController {
         Account fresh = accountService.getAccountByUsername(account.getUsername());
         List<SubAccount> subs = subAccountService.list(fresh);
         Map<String, Object> response = new HashMap<>();
-        response.put("main", Map.of(
-                "name", "Main Account",
-                "type", fresh.getAccountType(),
-                "accountNumber", fresh.getAccountNumber(),
-                "balance", fresh.getBalance()
-        ));
+        response.put("main", Map.of("name", "Main Account", "type", fresh.getAccountType(), "accountNumber",
+                fresh.getAccountNumber(), "balance", fresh.getBalance()));
         response.put("subs", subs);
         return response;
     }
 
     @PostMapping
     public Map<String, Object> open(@AuthenticationPrincipal Account account,
-                                    @RequestBody OpenSubAccountRequest request) {
+            @RequestBody OpenSubAccountRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Account fresh = accountService.getAccountByUsername(account.getUsername());
@@ -59,7 +55,7 @@ public class SubAccountController {
 
     @PostMapping("/transfer")
     public Map<String, Object> transfer(@AuthenticationPrincipal Account account,
-                                        @RequestBody InternalTransferRequest request) {
+            @RequestBody InternalTransferRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Account fresh = accountService.getAccountByUsername(account.getUsername());

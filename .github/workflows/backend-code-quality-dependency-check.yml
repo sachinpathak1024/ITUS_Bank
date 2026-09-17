@@ -1,0 +1,46 @@
+name: frontend code-quality and dependency check check
+
+on:
+    # push:
+    #     branches: [actions]
+    workflow_call
+
+jobs:
+    validate-backend:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v4
+
+            - name: Check for Backend Changes
+              id: filter
+              uses: dorny/paths-filter@v3
+              with:
+                filters: |
+                    backend:
+                    - 'backend/**'
+
+            # - name: Set up JDK 17
+            #   if: steps.filter.outputs.backend == 'true'
+            #   uses: actions/setup-java@v4
+            #   with:
+            #     java-version: '17'
+            #     distribution: 'temurin'
+            #     cache: 'maven'
+
+
+
+            - name: Set up JDK 21
+              if: steps.filter.outputs.backend == 'true'
+              uses: actions/setup-java@v4
+              with:
+                java-version: '21'
+                distribution: 'temurin'
+                cache: maven
+
+
+            - name: Run Backend Quality Checks
+              if: steps.filter.outputs.backend == 'true'
+              working-directory: ./backend
+              run: |
+                mvn clean verify spotless:check

@@ -32,8 +32,7 @@ public class BillController {
     }
 
     @PostMapping("/pay")
-    public Map<String, Object> pay(@AuthenticationPrincipal Account account,
-                                   @RequestBody PayBillRequest request) {
+    public Map<String, Object> pay(@AuthenticationPrincipal Account account, @RequestBody PayBillRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Bill bill = billService.pay(account, request);

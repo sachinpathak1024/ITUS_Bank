@@ -6,7 +6,10 @@ import com.bankapp.model.Card;
 import com.bankapp.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -27,8 +30,7 @@ public class CardController {
     }
 
     @PostMapping
-    public Map<String, Object> issue(@AuthenticationPrincipal Account account,
-                                     @RequestBody IssueCardRequest request) {
+    public Map<String, Object> issue(@AuthenticationPrincipal Account account, @RequestBody IssueCardRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Card card = cardService.issue(account, request);
@@ -44,7 +46,7 @@ public class CardController {
 
     @PostMapping("/{id}/freeze")
     public Map<String, Object> freeze(@AuthenticationPrincipal Account account, @PathVariable Long id,
-                                      @RequestBody Map<String, Boolean> body) {
+            @RequestBody Map<String, Boolean> body) {
         Map<String, Object> response = new HashMap<>();
         try {
             cardService.setFrozen(account, id, Boolean.TRUE.equals(body.get("frozen")));
@@ -58,7 +60,7 @@ public class CardController {
 
     @PostMapping("/{id}/limit")
     public Map<String, Object> limit(@AuthenticationPrincipal Account account, @PathVariable Long id,
-                                     @RequestBody Map<String, BigDecimal> body) {
+            @RequestBody Map<String, BigDecimal> body) {
         Map<String, Object> response = new HashMap<>();
         try {
             cardService.setLimit(account, id, body.get("dailyLimit"));

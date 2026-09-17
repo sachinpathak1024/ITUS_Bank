@@ -32,8 +32,7 @@ public class BudgetController {
     }
 
     @PostMapping
-    public Map<String, Object> upsert(@AuthenticationPrincipal Account account,
-                                      @RequestBody BudgetRequest request) {
+    public Map<String, Object> upsert(@AuthenticationPrincipal Account account, @RequestBody BudgetRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Budget budget = budgetService.upsert(account, request);

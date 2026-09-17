@@ -46,17 +46,14 @@ public class BankController {
     @GetMapping("/profile")
     public ProfileResponse getProfile(@AuthenticationPrincipal Account account) {
         Account fresh = accountService.getAccountByUsername(account.getUsername());
-        return new ProfileResponse(
-                fresh.getUsername(), fresh.getFullName(), fresh.getEmail(),
-                fresh.getAccountNumber(), fresh.getAccountType(),
-                fresh.getBalance(), fresh.getCreatedAt(),
-                fresh.getPhone(), fresh.getAddress(), fresh.getOccupation(),
-                fresh.getKycStatus(), fresh.getAvatarBase64());
+        return new ProfileResponse(fresh.getUsername(), fresh.getFullName(), fresh.getEmail(), fresh.getAccountNumber(),
+                fresh.getAccountType(), fresh.getBalance(), fresh.getCreatedAt(), fresh.getPhone(), fresh.getAddress(),
+                fresh.getOccupation(), fresh.getKycStatus(), fresh.getAvatarBase64());
     }
 
     @PutMapping("/profile")
     public Map<String, Object> updateProfile(@AuthenticationPrincipal Account account,
-                                             @RequestBody UpdateProfileRequest request) {
+            @RequestBody UpdateProfileRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Account fresh = accountService.getAccountByUsername(account.getUsername());
@@ -75,7 +72,7 @@ public class BankController {
 
     @PostMapping("/profile/avatar")
     public Map<String, Object> updateAvatar(@AuthenticationPrincipal Account account,
-                                            @RequestBody AvatarRequest request) {
+            @RequestBody AvatarRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Account fresh = accountService.getAccountByUsername(account.getUsername());
@@ -98,10 +95,22 @@ public class BankController {
         long deposits = 0, withdrawals = 0, sent = 0, received = 0;
         for (Transaction t : all) {
             switch (t.getTransactionType()) {
-                case "DEPOSIT" -> { credits = credits.add(t.getAmount()); deposits++; }
-                case "TRANSFER_RECEIVED" -> { credits = credits.add(t.getAmount()); received++; }
-                case "WITHDRAWAL" -> { debits = debits.add(t.getAmount()); withdrawals++; }
-                case "TRANSFER_SENT" -> { debits = debits.add(t.getAmount()); sent++; }
+                case "DEPOSIT" -> {
+                    credits = credits.add(t.getAmount());
+                    deposits++;
+                }
+                case "TRANSFER_RECEIVED" -> {
+                    credits = credits.add(t.getAmount());
+                    received++;
+                }
+                case "WITHDRAWAL" -> {
+                    debits = debits.add(t.getAmount());
+                    withdrawals++;
+                }
+                case "TRANSFER_SENT" -> {
+                    debits = debits.add(t.getAmount());
+                    sent++;
+                }
             }
         }
         Map<String, Object> stats = new HashMap<>();
@@ -117,7 +126,7 @@ public class BankController {
 
     @PostMapping("/deposit")
     public Map<String, Object> deposit(@AuthenticationPrincipal Account account,
-                                       @RequestBody TransactionRequest request) {
+            @RequestBody TransactionRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Account updated = accountService.deposit(account, request.getAmount(), request.getPin());
@@ -133,7 +142,7 @@ public class BankController {
 
     @PostMapping("/withdraw")
     public Map<String, Object> withdraw(@AuthenticationPrincipal Account account,
-                                        @RequestBody TransactionRequest request) {
+            @RequestBody TransactionRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Account updated = accountService.withdraw(account, request.getAmount(), request.getPin());
@@ -149,11 +158,11 @@ public class BankController {
 
     @PostMapping("/transfer")
     public Map<String, Object> transfer(@AuthenticationPrincipal Account account,
-                                        @RequestBody TransactionRequest request) {
+            @RequestBody TransactionRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
-            accountService.transfer(account, request.getRecipientUsername(),
-                    request.getAmount(), request.getDescription(), request.getPin());
+            accountService.transfer(account, request.getRecipientUsername(), request.getAmount(),
+                    request.getDescription(), request.getPin());
             Account updated = accountService.getAccountByUsername(account.getUsername());
             response.put("success", true);
             response.put("balance", updated.getBalance());
@@ -166,16 +175,11 @@ public class BankController {
     }
 
     @GetMapping("/transactions")
-    public Map<String, Object> getTransactions(
-            @AuthenticationPrincipal Account account,
-            @RequestParam(required = false) String type,
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false)
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(required = false)
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+    public Map<String, Object> getTransactions(@AuthenticationPrincipal Account account,
+            @RequestParam(required = false) String type, @RequestParam(required = false) String search,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         Page<Transaction> result = transactionService.search(account, type, start, end, search, page, size);
         Map<String, Object> response = new HashMap<>();
         response.put("content", result.getContent());
@@ -188,18 +192,15 @@ public class BankController {
 
     @GetMapping("/insights")
     public Map<String, Object> insights(@AuthenticationPrincipal Account account,
-                                        @RequestParam(defaultValue = "6") int months) {
+            @RequestParam(defaultValue = "6") int months) {
         Account fresh = accountService.getAccountByUsername(account.getUsername());
         return insightsService.compute(fresh, months);
     }
 
     @GetMapping("/statement")
-    public ResponseEntity<String> statement(
-            @AuthenticationPrincipal Account account,
-            @RequestParam(required = false)
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(required = false)
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+    public ResponseEntity<String> statement(@AuthenticationPrincipal Account account,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         Account fresh = accountService.getAccountByUsername(account.getUsername());
         String csv = insightsService.csv(fresh, start, end);
         HttpHeaders headers = new HttpHeaders();
@@ -209,12 +210,9 @@ public class BankController {
     }
 
     @GetMapping("/statement.html")
-    public ResponseEntity<String> statementHtml(
-            @AuthenticationPrincipal Account account,
-            @RequestParam(required = false)
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(required = false)
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+    public ResponseEntity<String> statementHtml(@AuthenticationPrincipal Account account,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         Account fresh = accountService.getAccountByUsername(account.getUsername());
         String html = insightsService.html(fresh, start, end);
         HttpHeaders headers = new HttpHeaders();

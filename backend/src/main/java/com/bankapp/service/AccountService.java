@@ -64,8 +64,7 @@ public class AccountService {
         account.setBalance(account.getBalance().add(amount));
         accountRepository.save(account);
         transactionService.recordTransaction(account, "DEPOSIT", amount, null, null, "Deposit");
-        notificationService.emit(account, "DEPOSIT", "Deposit received",
-                "₹" + amount + " was added to your account.");
+        notificationService.emit(account, "DEPOSIT", "Deposit received", "₹" + amount + " was added to your account.");
         return account;
     }
 
@@ -91,7 +90,10 @@ public class AccountService {
         transferUnchecked(fromAccount, toUsername, amount, note);
     }
 
-    /** Used by the scheduled-transfer cron — PIN is not enforced because the user authorised it at scheduling time. */
+    /**
+     * Used by the scheduled-transfer cron — PIN is not enforced because the user
+     * authorised it at scheduling time.
+     */
     public void transferUnchecked(Account fromAccount, String toUsername, BigDecimal amount, String note) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Amount must be greater than 0");
@@ -112,15 +114,16 @@ public class AccountService {
         accountRepository.save(toAccount);
 
         String sentDescription = (note == null || note.isBlank())
-                ? "Transfer to " + toUsername : "Transfer to " + toUsername + " — " + note;
+                ? "Transfer to " + toUsername
+                : "Transfer to " + toUsername + " — " + note;
         String receivedDescription = (note == null || note.isBlank())
                 ? "Transfer from " + fromAccount.getUsername()
                 : "Transfer from " + fromAccount.getUsername() + " — " + note;
 
-        transactionService.recordTransaction(fromAccount, "TRANSFER_SENT", amount,
-                toAccount.getAccountNumber(), null, sentDescription);
-        transactionService.recordTransaction(toAccount, "TRANSFER_RECEIVED", amount,
-                null, fromAccount.getAccountNumber(), receivedDescription);
+        transactionService.recordTransaction(fromAccount, "TRANSFER_SENT", amount, toAccount.getAccountNumber(), null,
+                sentDescription);
+        transactionService.recordTransaction(toAccount, "TRANSFER_RECEIVED", amount, null,
+                fromAccount.getAccountNumber(), receivedDescription);
 
         notificationService.emit(fromAccount, "TRANSFER", "Transfer sent",
                 "₹" + amount + " sent to " + toUsername + ".");
@@ -129,8 +132,8 @@ public class AccountService {
         budgetService.evaluate(fromAccount);
     }
 
-    public Account updateProfile(Account account, String fullName, String email,
-                                 String phone, String address, String occupation) {
+    public Account updateProfile(Account account, String fullName, String email, String phone, String address,
+            String occupation) {
         if (fullName != null && !fullName.isBlank()) {
             account.setFullName(fullName);
         }
@@ -140,9 +143,12 @@ public class AccountService {
             }
             account.setEmail(email);
         }
-        if (phone != null) account.setPhone(phone);
-        if (address != null) account.setAddress(address);
-        if (occupation != null) account.setOccupation(occupation);
+        if (phone != null)
+            account.setPhone(phone);
+        if (address != null)
+            account.setAddress(address);
+        if (occupation != null)
+            account.setOccupation(occupation);
         return accountRepository.save(account);
     }
 

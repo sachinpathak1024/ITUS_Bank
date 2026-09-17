@@ -15,7 +15,8 @@ public class LoginHistoryService {
     private LoginHistoryRepository loginHistoryRepository;
 
     public void record(Account account, boolean success, String ip, String userAgent) {
-        if (account == null) return;
+        if (account == null)
+            return;
         LoginHistory entry = new LoginHistory();
         entry.setAccount(account);
         entry.setSuccess(success);

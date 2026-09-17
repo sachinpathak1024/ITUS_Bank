@@ -35,10 +35,12 @@ public class CardService {
 
     public Card issue(Account owner, IssueCardRequest request) {
         String type = (request.getType() == null ? "DEBIT" : request.getType()).toUpperCase();
-        if (!TYPES.contains(type)) throw new IllegalArgumentException("Type must be DEBIT or CREDIT");
+        if (!TYPES.contains(type))
+            throw new IllegalArgumentException("Type must be DEBIT or CREDIT");
 
         String network = (request.getNetwork() == null ? "VISA" : request.getNetwork()).toUpperCase();
-        if (!NETWORKS.contains(network)) throw new IllegalArgumentException("Network must be VISA / MASTERCARD / RUPAY");
+        if (!NETWORKS.contains(network))
+            throw new IllegalArgumentException("Network must be VISA / MASTERCARD / RUPAY");
 
         BigDecimal dailyLimit = request.getDailyLimit() == null ? new BigDecimal("25000") : request.getDailyLimit();
 
@@ -58,9 +60,8 @@ public class CardService {
             card.setCreditLimit(request.getCreditLimit() == null ? new BigDecimal("100000") : request.getCreditLimit());
         }
         Card saved = cardRepository.save(card);
-        notificationService.emit(owner, "SYSTEM", "Card issued",
-                type + " card ending in " + saved.getCardNumber().substring(saved.getCardNumber().length() - 4)
-                        + " is ready to use.");
+        notificationService.emit(owner, "SYSTEM", "Card issued", type + " card ending in "
+                + saved.getCardNumber().substring(saved.getCardNumber().length() - 4) + " is ready to use.");
         return saved;
     }
 
@@ -70,8 +71,8 @@ public class CardService {
         card.setFrozen(frozen);
         Card saved = cardRepository.save(card);
         notificationService.emit(owner, "SYSTEM", frozen ? "Card frozen" : "Card unfrozen",
-                "Card ending " + card.getCardNumber().substring(card.getCardNumber().length() - 4)
-                        + " is now " + (frozen ? "frozen." : "active."));
+                "Card ending " + card.getCardNumber().substring(card.getCardNumber().length() - 4) + " is now "
+                        + (frozen ? "frozen." : "active."));
         return saved;
     }
 
@@ -100,12 +101,14 @@ public class CardService {
             default -> "9999";
         };
         StringBuilder sb = new StringBuilder(prefix);
-        for (int i = 0; i < 12; i++) sb.append(RAND.nextInt(10));
+        for (int i = 0; i < 12; i++)
+            sb.append(RAND.nextInt(10));
         return sb.toString();
     }
 
     private String maskNumber(String number) {
-        if (number == null || number.length() < 4) return number;
+        if (number == null || number.length() < 4)
+            return number;
         return "•••• •••• •••• " + number.substring(number.length() - 4);
     }
 }

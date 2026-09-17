@@ -50,8 +50,7 @@ public class ScheduledTransferService {
         st.setAmount(request.getAmount());
         st.setDescription(request.getDescription());
         st.setFrequency(freq);
-        st.setNextRun(request.getNextRun() != null ? request.getNextRun()
-                : LocalDateTime.now().plusDays(1));
+        st.setNextRun(request.getNextRun() != null ? request.getNextRun() : LocalDateTime.now().plusDays(1));
         st.setActive(true);
         return scheduledTransferRepository.save(st);
     }
@@ -69,7 +68,10 @@ public class ScheduledTransferService {
         return scheduledTransferRepository.save(st);
     }
 
-    /** Used by the cron job. Throws if execution fails; caller decides whether to deactivate. */
+    /**
+     * Used by the cron job. Throws if execution fails; caller decides whether to
+     * deactivate.
+     */
     public ScheduledTransfer executeDue(ScheduledTransfer st) {
         executeOnce(st);
         return scheduledTransferRepository.save(st);
@@ -85,18 +87,14 @@ public class ScheduledTransferService {
             st.setActive(false);
             st.setNextRun(now);
         } else if ("WEEKLY".equals(st.getFrequency())) {
-            st.setNextRun(st.getNextRun().isBefore(now)
-                    ? now.plusWeeks(1) : st.getNextRun().plusWeeks(1));
+            st.setNextRun(st.getNextRun().isBefore(now) ? now.plusWeeks(1) : st.getNextRun().plusWeeks(1));
         } else if ("MONTHLY".equals(st.getFrequency())) {
-            st.setNextRun(st.getNextRun().isBefore(now)
-                    ? now.plusMonths(1) : st.getNextRun().plusMonths(1));
+            st.setNextRun(st.getNextRun().isBefore(now) ? now.plusMonths(1) : st.getNextRun().plusMonths(1));
         }
     }
 
     public List<ScheduledTransfer> findActiveAndDue(LocalDateTime now) {
-        return scheduledTransferRepository.findAll().stream()
-                .filter(s -> Boolean.TRUE.equals(s.getActive()))
-                .filter(s -> s.getNextRun() != null && !s.getNextRun().isAfter(now))
-                .toList();
+        return scheduledTransferRepository.findAll().stream().filter(s -> Boolean.TRUE.equals(s.getActive()))
+                .filter(s -> s.getNextRun() != null && !s.getNextRun().isAfter(now)).toList();
     }
 }

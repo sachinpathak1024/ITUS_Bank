@@ -40,13 +40,12 @@ public class BudgetService {
         if (request.getMonthlyLimit() == null || request.getMonthlyLimit().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Limit must be greater than 0");
         }
-        Budget budget = budgetRepository.findByOwnerAndCategory(owner, request.getCategory())
-                .orElseGet(() -> {
-                    Budget b = new Budget();
-                    b.setOwner(owner);
-                    b.setCategory(request.getCategory());
-                    return b;
-                });
+        Budget budget = budgetRepository.findByOwnerAndCategory(owner, request.getCategory()).orElseGet(() -> {
+            Budget b = new Budget();
+            b.setOwner(owner);
+            b.setCategory(request.getCategory());
+            return b;
+        });
         budget.setMonthlyLimit(request.getMonthlyLimit());
         // Reset alert flags so they re-fire next time
         budget.setAlert80SentFor(null);
@@ -60,15 +59,19 @@ public class BudgetService {
         budgetRepository.delete(budget);
     }
 
-    /** Return month-to-date spending per category, for all of the owner's budgets. */
+    /**
+     * Return month-to-date spending per category, for all of the owner's budgets.
+     */
     public Map<String, BigDecimal> monthToDateSpending(Account owner) {
         LocalDateTime monthStart = YearMonth.now().atDay(1).atStartOfDay();
         List<Transaction> recent = transactionRepository.findByAccountOrderByCreatedAtDesc(owner);
         Map<String, BigDecimal> totals = new HashMap<>();
         for (Transaction t : recent) {
-            if (t.getCreatedAt() == null || t.getCreatedAt().isBefore(monthStart)) continue;
+            if (t.getCreatedAt() == null || t.getCreatedAt().isBefore(monthStart))
+                continue;
             String category = categoryOf(t);
-            if (category == null) continue;
+            if (category == null)
+                continue;
             totals.merge(category, t.getAmount(), BigDecimal::add);
         }
         return totals;
@@ -77,15 +80,15 @@ public class BudgetService {
     /** Re-evaluate alerts after a money operation. */
     public void evaluate(Account owner) {
         List<Budget> budgets = list(owner);
-        if (budgets.isEmpty()) return;
+        if (budgets.isEmpty())
+            return;
         Map<String, BigDecimal> spending = monthToDateSpending(owner);
         String monthKey = YearMonth.now().toString();
         for (Budget b : budgets) {
             BigDecimal spent = spending.getOrDefault(b.getCategory(), BigDecimal.ZERO);
             BigDecimal pct = b.getMonthlyLimit().compareTo(BigDecimal.ZERO) == 0
                     ? BigDecimal.ZERO
-                    : spent.multiply(BigDecimal.valueOf(100))
-                          .divide(b.getMonthlyLimit(), 0, RoundingMode.HALF_UP);
+                    : spent.multiply(BigDecimal.valueOf(100)).divide(b.getMonthlyLimit(), 0, RoundingMode.HALF_UP);
             boolean changed = false;
             if (pct.intValue() >= 100 && !monthKey.equals(b.getAlert100SentFor())) {
                 notificationService.emit(owner, "SYSTEM", b.getCategory() + " budget exceeded",
@@ -98,21 +101,26 @@ public class BudgetService {
                 b.setAlert80SentFor(monthKey);
                 changed = true;
             }
-            if (changed) budgetRepository.save(b);
+            if (changed)
+                budgetRepository.save(b);
         }
     }
 
     private String categoryOf(Transaction t) {
-        if (t == null || t.getTransactionType() == null) return null;
+        if (t == null || t.getTransactionType() == null)
+            return null;
         String type = t.getTransactionType();
-        if ("DEPOSIT".equals(type) || "TRANSFER_RECEIVED".equals(type)) return null;
-        if ("TRANSFER_SENT".equals(type)) return "TRANSFER";
+        if ("DEPOSIT".equals(type) || "TRANSFER_RECEIVED".equals(type))
+            return null;
+        if ("TRANSFER_SENT".equals(type))
+            return "TRANSFER";
         if ("WITHDRAWAL".equals(type)) {
             String d = t.getDescription();
             if (d != null && d.startsWith("Bill:")) {
                 int open = d.lastIndexOf('(');
                 int close = d.lastIndexOf(')');
-                if (open > 0 && close > open) return d.substring(open + 1, close);
+                if (open > 0 && close > open)
+                    return d.substring(open + 1, close);
             }
             return "WITHDRAWAL";
         }

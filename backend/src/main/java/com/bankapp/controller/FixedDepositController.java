@@ -37,8 +37,7 @@ public class FixedDepositController {
     }
 
     @PostMapping("/open")
-    public Map<String, Object> open(@AuthenticationPrincipal Account account,
-                                    @RequestBody FDRequest request) {
+    public Map<String, Object> open(@AuthenticationPrincipal Account account, @RequestBody FDRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Account fresh = accountService.getAccountByUsername(account.getUsername());

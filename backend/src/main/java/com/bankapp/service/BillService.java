@@ -62,8 +62,7 @@ public class BillService {
 
         String description = "Bill: " + request.getBillerName()
                 + (request.getCategory() == null ? "" : " (" + request.getCategory() + ")");
-        transactionService.recordTransaction(account, "WITHDRAWAL", request.getAmount(),
-                null, null, description);
+        transactionService.recordTransaction(account, "WITHDRAWAL", request.getAmount(), null, null, description);
 
         notificationService.emit(account, "BILL", "Bill paid",
                 "Paid ₹" + request.getAmount() + " to " + request.getBillerName() + ".");

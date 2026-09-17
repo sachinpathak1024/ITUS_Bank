@@ -38,8 +38,8 @@ public class AuthController {
         try {
             Account account = accountService.registerAccount(request);
             String token = tokenProvider.generateToken(account);
-            return new JwtResponse(token, account.getUsername(), account.getEmail(),
-                    account.getFullName(), "Registration successful");
+            return new JwtResponse(token, account.getUsername(), account.getEmail(), account.getFullName(),
+                    "Registration successful");
         } catch (IllegalArgumentException e) {
             return new JwtResponse(null, null, null, null, e.getMessage());
         }
@@ -50,7 +50,8 @@ public class AuthController {
         Account attempted = null;
         try {
             attempted = accountService.getAccountByUsername(request.getUsername());
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+        }
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
@@ -58,8 +59,8 @@ public class AuthController {
             Account account = (Account) authentication.getPrincipal();
             String token = tokenProvider.generateToken(account);
             loginHistoryService.record(account, true, clientIp(http), http.getHeader("User-Agent"));
-            return new JwtResponse(token, account.getUsername(), account.getEmail(),
-                    account.getFullName(), "Login successful");
+            return new JwtResponse(token, account.getUsername(), account.getEmail(), account.getFullName(),
+                    "Login successful");
         } catch (Exception e) {
             if (attempted != null) {
                 loginHistoryService.record(attempted, false, clientIp(http), http.getHeader("User-Agent"));
@@ -70,7 +71,7 @@ public class AuthController {
 
     @PostMapping("/change-password")
     public Map<String, Object> changePassword(@AuthenticationPrincipal Account account,
-                                              @RequestBody ChangePasswordRequest request) {
+            @RequestBody ChangePasswordRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             if (account == null) {
@@ -89,9 +90,11 @@ public class AuthController {
 
     private String clientIp(HttpServletRequest http) {
         String xff = http.getHeader("X-Forwarded-For");
-        if (xff != null && !xff.isBlank()) return xff.split(",")[0].trim();
+        if (xff != null && !xff.isBlank())
+            return xff.split(",")[0].trim();
         String real = http.getHeader("X-Real-IP");
-        if (real != null && !real.isBlank()) return real;
+        if (real != null && !real.isBlank())
+            return real;
         return http.getRemoteAddr();
     }
 }

@@ -33,9 +33,8 @@ public class LoanController {
 
     @PostMapping("/emi-calc")
     public Map<String, Object> emiCalc(@RequestBody LoanRequest request) {
-        BigDecimal rate = loanService.rates().get(
-                request.getPurpose() == null ? "PERSONAL" : request.getPurpose().toUpperCase()
-        );
+        BigDecimal rate = loanService.rates()
+                .get(request.getPurpose() == null ? "PERSONAL" : request.getPurpose().toUpperCase());
         Map<String, Object> response = new HashMap<>();
         if (rate == null) {
             response.put("success", false);
@@ -53,8 +52,7 @@ public class LoanController {
     }
 
     @PostMapping("/apply")
-    public Map<String, Object> apply(@AuthenticationPrincipal Account account,
-                                     @RequestBody LoanRequest request) {
+    public Map<String, Object> apply(@AuthenticationPrincipal Account account, @RequestBody LoanRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Loan loan = loanService.apply(account, request);

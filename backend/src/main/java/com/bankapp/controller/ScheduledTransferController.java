@@ -27,7 +27,7 @@ public class ScheduledTransferController {
 
     @PostMapping
     public Map<String, Object> create(@AuthenticationPrincipal Account account,
-                                      @RequestBody ScheduledTransferRequest request) {
+            @RequestBody ScheduledTransferRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             ScheduledTransfer st = scheduledTransferService.create(account, request);

@@ -26,8 +26,7 @@ public class BeneficiaryController {
     }
 
     @PostMapping
-    public Map<String, Object> add(@AuthenticationPrincipal Account account,
-                                   @RequestBody BeneficiaryRequest request) {
+    public Map<String, Object> add(@AuthenticationPrincipal Account account, @RequestBody BeneficiaryRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Beneficiary beneficiary = beneficiaryService.add(account, request);

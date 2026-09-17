@@ -18,12 +18,15 @@ public class ScheduledTransferRunner {
     @Autowired
     private ScheduledTransferService scheduledTransferService;
 
-    /** Every minute, fire any scheduled transfers whose next-run time has passed. */
+    /**
+     * Every minute, fire any scheduled transfers whose next-run time has passed.
+     */
     @Scheduled(fixedDelay = 60_000, initialDelay = 30_000)
     public void run() {
         LocalDateTime now = LocalDateTime.now();
         List<ScheduledTransfer> due = scheduledTransferService.findActiveAndDue(now);
-        if (due.isEmpty()) return;
+        if (due.isEmpty())
+            return;
         log.info("Scheduled-transfer cron firing for {} item(s)", due.size());
         for (ScheduledTransfer st : due) {
             try {

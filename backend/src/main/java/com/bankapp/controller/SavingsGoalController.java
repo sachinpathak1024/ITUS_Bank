@@ -31,8 +31,7 @@ public class SavingsGoalController {
     }
 
     @PostMapping
-    public Map<String, Object> create(@AuthenticationPrincipal Account account,
-                                      @RequestBody GoalRequest request) {
+    public Map<String, Object> create(@AuthenticationPrincipal Account account, @RequestBody GoalRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             SavingsGoal goal = goalService.create(account, request);
@@ -46,9 +45,8 @@ public class SavingsGoalController {
     }
 
     @PostMapping("/{id}/contribute")
-    public Map<String, Object> contribute(@AuthenticationPrincipal Account account,
-                                          @PathVariable Long id,
-                                          @RequestBody GoalContributeRequest request) {
+    public Map<String, Object> contribute(@AuthenticationPrincipal Account account, @PathVariable Long id,
+            @RequestBody GoalContributeRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
             Account fresh = accountService.getAccountByUsername(account.getUsername());

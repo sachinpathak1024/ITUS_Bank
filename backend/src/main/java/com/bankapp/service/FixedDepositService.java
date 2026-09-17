@@ -19,14 +19,8 @@ import java.util.Map;
 public class FixedDepositService {
 
     // Hardcoded rates by tenure (annual %)
-    private static final Map<Integer, BigDecimal> RATES = Map.of(
-            3,  new BigDecimal("5.5"),
-            6,  new BigDecimal("6.0"),
-            12, new BigDecimal("6.8"),
-            24, new BigDecimal("7.2"),
-            36, new BigDecimal("7.5"),
-            60, new BigDecimal("7.0")
-    );
+    private static final Map<Integer, BigDecimal> RATES = Map.of(3, new BigDecimal("5.5"), 6, new BigDecimal("6.0"), 12,
+            new BigDecimal("6.8"), 24, new BigDecimal("7.2"), 36, new BigDecimal("7.5"), 60, new BigDecimal("7.0"));
 
     @Autowired
     private FixedDepositRepository fdRepository;
@@ -54,8 +48,7 @@ public class FixedDepositService {
     @Transactional
     public FixedDeposit open(Account owner, FDRequest request) {
         pinService.enforce(owner, request.getPin());
-        if (request.getPrincipal() == null
-                || request.getPrincipal().compareTo(new BigDecimal("1000")) < 0) {
+        if (request.getPrincipal() == null || request.getPrincipal().compareTo(new BigDecimal("1000")) < 0) {
             throw new IllegalArgumentException("Minimum FD amount is ₹1,000");
         }
         BigDecimal rate = RATES.get(request.getTenureMonths());
@@ -69,8 +62,7 @@ public class FixedDepositService {
         // Simple compound interest, monthly compounding for demo realism.
         BigDecimal months = BigDecimal.valueOf(request.getTenureMonths());
         double monthlyRate = rate.doubleValue() / 12.0 / 100.0;
-        double maturity = request.getPrincipal().doubleValue()
-                * Math.pow(1 + monthlyRate, request.getTenureMonths());
+        double maturity = request.getPrincipal().doubleValue() * Math.pow(1 + monthlyRate, request.getTenureMonths());
         BigDecimal maturityAmount = BigDecimal.valueOf(maturity).setScale(2, RoundingMode.HALF_UP);
 
         owner.setBalance(owner.getBalance().subtract(request.getPrincipal()));
@@ -88,9 +80,8 @@ public class FixedDepositService {
 
         transactionService.recordTransaction(owner, "WITHDRAWAL", request.getPrincipal(), null, null,
                 "Opened FD #" + saved.getId() + " (" + request.getTenureMonths() + " months @ " + rate + "%)");
-        notificationService.emit(owner, "SYSTEM", "FD opened",
-                "₹" + request.getPrincipal() + " FD locked for " + request.getTenureMonths()
-                        + " months @ " + rate + "%.");
+        notificationService.emit(owner, "SYSTEM", "FD opened", "₹" + request.getPrincipal() + " FD locked for "
+                + request.getTenureMonths() + " months @ " + rate + "%.");
         return saved;
     }
 
@@ -124,8 +115,7 @@ public class FixedDepositService {
             throw new IllegalArgumentException("FD is not active");
         }
         // 1% penalty on principal for demo
-        BigDecimal penalty = fd.getPrincipal().multiply(new BigDecimal("0.01"))
-                .setScale(2, RoundingMode.HALF_UP);
+        BigDecimal penalty = fd.getPrincipal().multiply(new BigDecimal("0.01")).setScale(2, RoundingMode.HALF_UP);
         BigDecimal payout = fd.getPrincipal().subtract(penalty);
 
         owner.setBalance(owner.getBalance().add(payout));

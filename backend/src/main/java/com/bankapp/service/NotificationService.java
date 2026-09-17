@@ -16,7 +16,8 @@ public class NotificationService {
     private NotificationRepository notificationRepository;
 
     public void emit(Account account, String type, String title, String message) {
-        if (account == null) return;
+        if (account == null)
+            return;
         Notification n = new Notification();
         n.setAccount(account);
         n.setType(type);

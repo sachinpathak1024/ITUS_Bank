@@ -43,7 +43,8 @@ public class BeneficiaryService {
         beneficiary.setRecipientFullName(recipient.getFullName());
         beneficiary.setRecipientAccountNumber(recipient.getAccountNumber());
         beneficiary.setNickname(request.getNickname() == null || request.getNickname().isBlank()
-                ? recipient.getFullName() : request.getNickname());
+                ? recipient.getFullName()
+                : request.getNickname());
         Beneficiary saved = beneficiaryRepository.save(beneficiary);
         notificationService.emit(owner, "BENEFICIARY", "Beneficiary added",
                 "You added " + beneficiary.getNickname() + " (@" + recipient.getUsername() + ").");
