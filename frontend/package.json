@@ -14,7 +14,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false",
     "lint": "eslint .",
-    "stylelint": "stylelint \"**/*.css\"",
+    "stylelint": "stylelint \"src/**/*.css\" --fix"
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -37,6 +37,7 @@
   "devDependencies": {
     "eslint": "^8.57.1",
     "react-scripts": "5.0.1",
-    "stylelint": "^17.15.0"
+    "stylelint": "^17.15.0",
+    "stylelint-config-standard": "^40.0.0"
   }
 }
