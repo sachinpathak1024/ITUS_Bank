@@ -13,7 +13,7 @@ via the `/api` prefix, which nginx proxies to the backend container.
 No CSS framework: there's a CSS-variable-based design system in `src/App.css`
 and per-page CSS.
 
-## Local development
+## Local development...
 
 ```bash
 cd frontend
