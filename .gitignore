@@ -15,7 +15,7 @@ Thumbs.db
 *.log
 
 # Ignore local Husky hooks
-.husky/
+# .husky/
 
 # OR, if you use a custom hooks folder
 .githooks/
