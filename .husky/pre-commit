@@ -4,3 +4,4 @@ npm run stylelint
 
 cd ../backend
 mvn spotless:apply
+mvn clean verify
