@@ -16,11 +16,6 @@ jobs:
                 username: ${{ vars.DOCKER_HUB_USERNAME }}
                 password: ${{ secrets.DOCKER_PASSWORD }}
 
-            - name: Trivy Scanner for Frontend Image
-              uses: aquasecurity/trivy-action@0.35.0
-              with:
-                image-ref: ${{ vars.DOCKER_HUB_USERNAME }}/frontend:${{ github.sha}}
-
 
             - name: Trivy Scanner for Backend Image
               uses: aquasecurity/trivy-action@0.35.0
