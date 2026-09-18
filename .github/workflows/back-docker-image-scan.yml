@@ -1,10 +1,10 @@
-name: Image Scanner
+name: Backend Image Scanner
 on:
     # push:
     #     branches: [actions]
     workflow_call:
 jobs:
-    image_scanner:
+    backend_image_scanner:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Code

@@ -42,7 +42,7 @@ services:
     # build:
     #   context: ./backend
     #   dockerfile: Dockerfile
-    image: ${DOCKER_HUB_USERNAME}/backend:${DOCKER_TAG}
+    image: ${DOCKERHUB_USER}/backend:${DOCKER_TAG}
     container_name: bankapp-backend
     ports:
       - "8082:8080"
@@ -69,7 +69,7 @@ services:
     # build:
     #   context: ./frontend
     #   dockerfile: Dockerfile
-    image: ${DOCKER_HUB_USERNAME}/frontend:${DOCKER_TAG}
+    image: ${DOCKERHUB_USER}/frontend:${DOCKER_TAG}
     container_name: bankapp-frontend
     ports:
       - "3000:3000"
