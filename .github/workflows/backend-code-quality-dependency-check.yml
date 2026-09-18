@@ -1,4 +1,4 @@
-name: backend code-quality and dependency check check
+name: backend code-quality and dependency check
 
 on:
     # push:
