@@ -1,6 +1,7 @@
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
-RUN apk add --no-cache --update maven=3.9.6-r0
+# hadolint ignore=DL3018
+RUN apk add --no-cache nodejs curl
 COPY pom.xml .
 COPY src src
 RUN mvn clean package -DskipTests
