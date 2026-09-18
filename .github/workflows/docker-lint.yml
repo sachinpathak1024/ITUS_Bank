@@ -13,12 +13,12 @@ jobs:
             - name: Checkout Code
               uses: actions/checkout@v4
             
-            - name: Validate Dockerfile
+            - name: Validate Frontend Dockerfile
               uses: hadolint/hadolint-action@v3.1.0
               with:
                 dockerfile: frontend/Dockerfile
 
-            - name: Validate Dockerfile
+            - name: Validate Backend Dockerfile
               uses: hadolint/hadolint-action@v3.1.0
               with:
                 dockerfile: backend/Dockerfile
