@@ -1,0 +1,32 @@
+- name: docker installation
+  hosts: itus_server
+  become: true
+  gather_facts: false
+
+
+  tasks:
+      - name: update repository
+        apt:
+          update_cache: yes
+
+      - name: installing docker
+        apt:
+          pkg: 
+          - docker.io
+          - docker-compose-v2
+
+      - name: Start service docker
+        systemd_service:
+         name: docker
+         state: started
+
+      - name: enabling docker
+        systemd_service:
+          name: docker
+          enabled: true
+
+        
+      - name: Add the user 'ubuntu' to docker group'
+        user:
+          name: ubuntu
+          group: docker

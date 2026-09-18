@@ -1,0 +1,7 @@
+[itus_server]
+server1 ansible_host=16.148.102.250
+
+[itus_server:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=../Terraform/Modules/EC2/itus-key
+ansible_python_interpreter=/usr/bin/python3
