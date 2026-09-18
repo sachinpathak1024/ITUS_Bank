@@ -3,6 +3,8 @@ WORKDIR /app
 RUN apk add --no-cache maven=~3.9
 
 COPY pom.xml .
+COPY config config
+
 COPY src src
 RUN mvn clean package -DskipTests
 
