@@ -1,0 +1,29 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: psql-pvc
+  namespace: itus-ns
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp3
+  resources:
+    requests:
+      storage: 5Gi
+  selector:
+    matchLabels:
+      app: psql-label
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ollama-pvc
+  namespace: itus-ns  
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp3
+  resources:
+    requests:
+      storage: 10Gi

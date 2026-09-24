@@ -1,0 +1,14 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: itus-configmap
+  namespace: itus-ns
+data:
+      DATABASE_HOST: psql-svc
+      DATABASE_PORT: "5432"
+      DATABASE_NAME: bankappdb
+      DATABASE_USER: bankuser
+      OLLAMA_URL: http://ollama-svc:11434
+      JWT_EXPIRATION: "86400000"
+      POSTGRES_DB: bankappdb
+      POSTGRES_USER: bankuser

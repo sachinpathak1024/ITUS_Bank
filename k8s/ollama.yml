@@ -1,0 +1,68 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ollama-deployment
+  namespace: itus-ns
+  labels:
+    app: ollama-label
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: ollama-label
+
+  template:
+    metadata:
+      labels:
+        app: ollama-label
+    spec:
+      #ollama-container specification -----------------------
+      containers:
+        - name: ollama
+          image: ollama/ollama:latest
+          ports: 
+          - containerPort: 11434
+          #Resource needed to run ollama-------------
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "500m"
+            limits:
+              memory: "2.5Gi"
+              cpu: "8000m"
+
+          #Probes------------------------------------
+          readinessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "ollama list | grep -q tinyllama"]
+            initialDelaySeconds: 30
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 11434
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 5
+            
+          #Volumes-----------------------------------
+          volumeMounts:
+              - name: ollama-storage
+                mountPath: /root/.ollama
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    until ollama list > /dev/null 2>&1; do sleep 2; done
+                    ollama pull tinyllama
+
+      volumes:
+        - name: ollama-storage
+          persistentVolumeClaim:
+            claimName: ollama-pvc
+  
