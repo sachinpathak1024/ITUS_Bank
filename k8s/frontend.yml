@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: sach990p/itus-frontend:98c40a8
+        image: sach990p/itus-frontend:8b0308f
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
