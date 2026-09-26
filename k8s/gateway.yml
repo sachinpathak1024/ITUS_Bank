@@ -61,15 +61,27 @@ spec:
       sectionName: http
   rules:
     - matches:
+          - path:
+              type: PathPrefix
+              value: /actuator
+      backendRefs:
+        - name: backend-svc         # Service pointing to Spring Boot pods
+          port: 8080
+    - matches:
         - path:
             type: PathPrefix
-            value: /
+            value: /api
       backendRefs:
-        - group: ""
-          kind: Service
           name: backend-svc
           port: 8080
-          weight: 1
+
+    - matches:
+            - path:
+                type: PathPrefix
+                value: /
+      backendRefs:
+        - name: frontend-service
+          port: 80
 ---
 # Session persistence: Envoy Gateway bypasses K8s Service sessionAffinity and
 # load-balances directly to pod endpoints. Without this policy, requests from
