@@ -1,7 +1,7 @@
 FROM ollama/ollama:latest
 
 # Pre-pull the llama3.2:1b model so the image is self-contained.
-# We start the Ollama daemon in the background just long enough to pull,
+# We start the Ollama daemmon in the background just long enough to pull,
 # then shut it down before exiting the build layer.
 RUN ollama serve & \
     SERVER=$! ; \
