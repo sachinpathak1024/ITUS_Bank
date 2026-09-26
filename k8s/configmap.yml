@@ -12,3 +12,4 @@ data:
       JWT_EXPIRATION: "86400000"
       POSTGRES_DB: bankappdb
       POSTGRES_USER: bankuser
+      PGDATA: "/var/lib/postgresql/data/pgdata"
