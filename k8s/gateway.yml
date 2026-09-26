@@ -80,7 +80,7 @@ spec:
                 type: PathPrefix
                 value: /
       backendRefs:
-        - name: frontend-service
+        - name: frontend-svc
           port: 80
 ---
 # Session persistence: Envoy Gateway bypasses K8s Service sessionAffinity and
