@@ -15,7 +15,7 @@ const AuthAside = () => (
     </div>
 
     <div className="auth-hero">
-      <h1>Banking made simple,<br />and beautifully secure.</h1>
+      <h1>Banking made simple,<br />and beautifully secure - ITUS.</h1>
       <p>Manage your money, transfer funds, save beneficiaries, and chat with our AI assistant — all in one place.</p>
       <div className="auth-features">
         <div className="auth-feature">
