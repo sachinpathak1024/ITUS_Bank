@@ -29,6 +29,11 @@ spec:
                 configMapKeyRef:
                   name: itus-configmap
                   key: POSTGRES_USER
+            - name: PGDATA
+              valueFrom:
+                configMapKeyRef:
+                  name: itus-configmap
+                  key: PGDATA
 
             - name: POSTGRES_DB
               valueFrom:
