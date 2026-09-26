@@ -1,0 +1,9 @@
+name: GitOps CI - Build & Push to DockerHub
+on:
+  workflow_dispatch:
+jobs:
+  stub:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Stub to register workflow"
+
