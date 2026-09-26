@@ -7,7 +7,7 @@ on:
       - 'src/**'
       - 'pom.xml'
       - 'Dockerfile'
-  # workflow_dispatch:
+  workflow_dispatch:
 
 permissions:
   contents: write
