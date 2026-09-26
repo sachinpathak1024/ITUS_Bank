@@ -20,7 +20,7 @@ spec:
         image: sach990p/itus-frontend:4a3de24
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 3000
+        - containerPort: 80
         envFrom:
           - configMapRef:
              name: itus-configmap
