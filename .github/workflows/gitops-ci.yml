@@ -91,5 +91,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add ${{ matrix.manifest }}
           git diff --staged --quiet || git commit -m "ci: update ${{ matrix.service }} image to ${{ steps.tag.outputs.sha_short }} [skip ci]"
-          # git pull origin gitops --rebase
+          git pull origin gitops --rebase
           git push origin gitops
