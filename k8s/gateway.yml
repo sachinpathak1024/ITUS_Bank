@@ -31,8 +31,7 @@ spec:
     - name: https
       protocol: HTTPS
       port: 443
-      hostname: 
-        - itus.sachinpathak.com
+      hostname: itus.sachinpathak.com
       tls:
         mode: Terminate
         certificateRefs:
