@@ -41,7 +41,7 @@ spec:
 
       containers:
       - name: backend
-        image: sach990p/itus-backend:ef50cb2
+        image: sach990p/itus-backend:aa068d7
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
