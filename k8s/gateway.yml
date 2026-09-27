@@ -31,7 +31,8 @@ spec:
     - name: https
       protocol: HTTPS
       port: 443
-      hostname: bankapp.sachinpathak.com
+      hostname: 
+        - itus.sachinpathak.com
       tls:
         mode: Terminate
         certificateRefs:
@@ -49,7 +50,7 @@ metadata:
   namespace: itus-ns
 spec:
   hostnames:
-    - bankapp.sachinpathak.com
+    - itus.sachinpathak.com
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
